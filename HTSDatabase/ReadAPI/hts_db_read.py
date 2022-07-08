@@ -1,0 +1,2 @@
+class ReadDB:
+    pass
