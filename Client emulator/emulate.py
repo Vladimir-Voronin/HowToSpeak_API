@@ -1,4 +1,4 @@
-from time import sleep
+import time
 
 import requests
 import json
@@ -6,7 +6,6 @@ import json
 
 def db_register():
     api_url = r"http://127.0.0.1:5000/howtospeak/api"
-    print(requests.get(api_url))
     data = {'username': 'Vava', 'password': 'idontknowanything'}
     json_data = json.dumps(data)
     r = requests.post(api_url + r'/register', headers={'Content-Type': 'application/json'}, data=json_data)
@@ -19,6 +18,7 @@ def db_login():
     json_data = json.dumps(data)
     r = requests.post(api_url + r'/login', headers={'Content-Type': 'application/json'}, data=json_data)
     print(r.text)
+    return r.cookies
 
 
 def db_login_by_api_key():
@@ -26,14 +26,6 @@ def db_login_by_api_key():
     data = {'api_key': 'd24e79e8dc14186aae7e0b960eef504e'}
     json_data = json.dumps(data)
     r = requests.post(api_url + r'/login', headers={'Content-Type': 'application/json'}, data=json_data)
-    print(r.text)
-
-
-def db_login_check():
-    api_url = r"http://127.0.0.1:5000/howtospeak/api"
-    data = {'api_key': 'd24e79e8dc14186aae7e0b960eef504e'}
-    json_data = json.dumps(data)
-    r = requests.get(api_url + r'/login', headers={'Content-Type': 'application/json'}, data=json_data)
     print(r.text)
 
 
@@ -45,12 +37,13 @@ def db_update_session():
     print(r.text)
 
 
-def upgrade_vocabulary():
+def upgrade_vocabulary(cookies):
     api_url = r"http://127.0.0.1:5000/howtospeak/api"
-    data = {'api_key': 'd24e79e8dc14186aae7e0b960eef504e',
+    data = {'username': 'Vava', 'session_info': 'Vava',
             'words': ['man', 'legend', 'fork', 'kfegf', 'man', 'new', 'use']}
     json_data = json.dumps(data)
-    r = requests.post(api_url + r'/upgrade_vocabulary', headers={'Content-Type': 'application/json'}, data=json_data)
+    r = requests.post(api_url + r'/update/vocabulary', headers={'Content-Type': 'application/json'}, cookies=cookies,
+                      data=json_data)
     print(r.text)
 
 
@@ -64,6 +57,7 @@ def get_actual_words():
 
 
 if __name__ == '__main__':
-    db_login_by_api_key()
-    upgrade_vocabulary()
-    get_actual_words()
+    db_register()
+    cookies = db_login()
+    upgrade_vocabulary(cookies)
+
