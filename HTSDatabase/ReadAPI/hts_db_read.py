@@ -23,4 +23,30 @@ class ReadDB:
 
         return db_responce
 
+    @staticmethod
+    def get_method_frequency_dict(db, frequency_method_name):
+        col_freq_method = db['frequencyMethods']
+        words = col_freq_method.find({'name': frequency_method_name})
+        words_list = list(words)
 
+        words_dict_list = words_list[0]['wordsRatingList']
+        type_ = words_list[0]['type']
+
+        result_words = {}
+        for d in words_dict_list:
+            result_words[d['text']] = d['rating']
+
+        return result_words, type_
+
+    @staticmethod
+    def get_user_frequency_dict(db, username):
+        col_users = db['users']
+        user_cursor = col_users.find({'name': username})
+
+        user_dict_list = user_cursor[0]['words_list']
+
+        result_user_dict = {}
+        for d in user_dict_list:
+            result_user_dict[d['text']] = d['frequencyUse']
+
+        return result_user_dict
