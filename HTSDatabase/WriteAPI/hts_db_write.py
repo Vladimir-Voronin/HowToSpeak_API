@@ -16,28 +16,18 @@ class WriteDB:
 
     @staticmethod
     def update_user_vocabulary(db, username, freq_dict, words=None):
-        if not words:
-            col_words = db['words']
-            words = {}
-            words_list = list(col_words.find())
-            for word in words_list:
-                words[word['text']] = word['_id']
-
-        freq_dict = {k: v for k, v in freq_dict.items() if k in words}
         if not freq_dict:
             return DBresponse(True, 'there are no such words in DB')
-        freq_dict_id = {}
-        for k, v in freq_dict.items():
-            freq_dict_id[words[k]] = v
 
         col_users = db['users']
+
         user_list = col_users.find({'name': username})
         current_values = {}
         user_already_used = user_list[0]['words_list']
         for i in user_already_used:
-            current_values[i['_id']] = i['number']
+            current_values[i['text']] = i['frequencyUse']
 
-        for k, v in freq_dict_id.items():
+        for k, v in freq_dict.items():
             if k in current_values:
                 current_values[k] += v
             else:
@@ -45,7 +35,7 @@ class WriteDB:
 
         result = []
         for k, v in current_values.items():
-            result.append({'_id': k, 'number': v})
+            result.append({'text': k, 'frequencyUse': v})
 
         col_users.update_one({'name': username}, {'$set': {'words_list': result}})
         return DBresponse(True)
