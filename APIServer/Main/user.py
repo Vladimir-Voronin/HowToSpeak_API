@@ -10,7 +10,6 @@ class User:
         self.username = None
         self.salt = None
         self.hash_password = None
-        self.api_key = None
 
     def register(self, name: str, password: str):
         password = bytes(password.encode('utf-8'))
@@ -19,7 +18,6 @@ class User:
         password = password + SALT_PASSWORD_GENERAL
         self.hash_password = bcrypt.hashpw(password, self.salt).decode('utf-8')
         self.salt = self.salt.decode('utf-8')
-        self.api_key = secrets.token_hex(16)
         return self
 
     @staticmethod

@@ -31,7 +31,7 @@ def login():
         user_entity = CasherHTS.users_bname[name]
     else:
         if not ReadDB.is_user_existent_by_name(DB, name):
-            abort(403, description=f"User with this nickname are not existed")
+            abort(403, description=f"User with this nickname is not existing")
 
         db_resp = ReadDB.user_info_by_name(DB, name)
         if not db_resp:
