@@ -32,7 +32,7 @@ def update_vocabulary():
     return jsonify(text='Your vocabulary has been updated')
 
 
-@app.route(BASE_URL + '/vocabulary/get', methods=['POST'])
+@app.route(BASE_URL + '/vocabulary/get', methods=['GET'])
 def get_vocabulary():
     request_data = request.get_json()
     request_validation(request_data, 'username', 'frequency_method_name', 'number_of_words', 'handler_method')
